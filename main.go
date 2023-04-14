@@ -13,7 +13,6 @@ import (
 var (
 	token   string
 	signf   = make(chan os.Signal)
-	forever = make(chan bool)
 	client  *discordgo.Session
 )
 
@@ -26,7 +25,6 @@ func handleInterrupt(sigch chan os.Signal) {
 	<-sigch
 	log.Println("Stopping ...")
 	client.Close()
-	forever <- true
 }
 
 func main() {
@@ -43,7 +41,5 @@ func main() {
 
 	signal.Notify(signf, syscall.SIGINT, syscall.SIGTERM, os.Interrupt)
 
-	go handleInterrupt(signf)
-
-	<-forever
+	handleInterrupt(signf)
 }

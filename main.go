@@ -11,9 +11,9 @@ import (
 )
 
 var (
-	token   string
-	signf   = make(chan os.Signal)
-	client  *discordgo.Session
+	token  string
+	signf  = make(chan os.Signal)
+	client *discordgo.Session
 )
 
 func init() {

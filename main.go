@@ -16,15 +16,15 @@ var (
 	client *discordgo.Session
 )
 
-func init() {
-	godotenv.Load()
-	token = os.Getenv("TOKEN")
-}
-
 func handleInterrupt(sigch chan os.Signal) {
 	<-sigch
 	log.Println("Stopping ...")
 	client.Close()
+}
+
+func init() {
+	godotenv.Load()
+	token = os.Getenv("TOKEN")
 }
 
 func main() {
@@ -34,6 +34,10 @@ func main() {
 	if err != nil {
 		log.Panicln("Failed to connect to discord\n" + err.Error())
 	}
+
+	client.Identify.Intents = discordgo.MakeIntent(discordgo.IntentsAll)
+
+	client.AddHandler(onReady)
 
 	if err = client.Open(); err != nil {
 		log.Panicln("Failed to connect to discord\n" + err.Error())

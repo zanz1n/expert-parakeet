@@ -10,3 +10,9 @@ func BasicResponse(msg string) *discordgo.InteractionResponse {
 		},
 	}
 }
+
+func BasicResponseEdit(msg string) *discordgo.WebhookEdit {
+	return &discordgo.WebhookEdit{
+		Content: &msg,
+	}
+}

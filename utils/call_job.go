@@ -11,7 +11,7 @@ const callJobInterval uint8 = 1
 
 type CallJob struct {
 	GuildId string
-	UserId  string
+	User  *discordgo.User
 	Times   int
 }
 
@@ -31,7 +31,6 @@ func (cm *CallJobManager) AttachListenner() {
 	var (
 		evt      CallJob
 		err      error
-		userVc   *discordgo.VoiceState
 		channels []*discordgo.Channel
 		chList   []*discordgo.Channel
 	)
@@ -58,9 +57,7 @@ func (cm *CallJobManager) AttachListenner() {
 			continue
 		}
 
-		userVc, err = cm.c.State.VoiceState(evt.GuildId, evt.UserId)
-
-		log.Printf("%v", userVc)
+		log.Printf("%v", evt.User.ID)
 
 		cchI := 0
 		for i := 0; i < evt.Times; i++ {

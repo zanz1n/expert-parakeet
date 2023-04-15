@@ -1,6 +1,5 @@
 # expert-parakeet
 
-Um bot para discord feito com o único objetivo de infernizar a vida das pessoas.
-A princípio o pincipal funcionalidade dele seria ficar movendo alguém de cal
-infinitamente até essa pessoa ficar brava, mas irei adicionar mais
-funcionalidades no futuro.
+A Discord bot made with the only purpose of annoying someone. It was originally
+designed to move people between calls until this person rage, but i will add more
+stuff in the future.

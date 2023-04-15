@@ -33,7 +33,7 @@ func prompRequiredEnvs() {
 
 	if os.Getenv("DISCORD_TOKEN") == "" {
 		fmt.Println("Discord token: ")
-		token, err := term.ReadPassword(syscall.Stdin)
+		token, err := term.ReadPassword(int(syscall.Stdin))
 
 		if err != nil {
 			log.Fatalln("Please provide a valid token")

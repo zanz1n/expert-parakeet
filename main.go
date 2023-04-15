@@ -28,6 +28,25 @@ func init() {
 	signf = make(chan os.Signal)
 }
 
+func tryGetFromCmdArgs() bool {
+	i := 0
+	for _, arg := range os.Args {
+		args := strings.Split(arg, "=")
+		if len(arg) > 1 {
+			if args[0] == "--token" {
+				i++
+				os.Setenv("DISCORD_TOKEN", args[1])
+			}
+			if args[0] == "--guild" {
+				i++
+				os.Setenv("GUILD_ID", args[1])
+			}
+		}
+	}
+
+	return i == 2
+}
+
 func prompRequiredEnvs() {
 	reader := bufio.NewReader(os.Stdin)
 
@@ -69,6 +88,7 @@ func prompRequiredEnvs() {
 }
 
 func main() {
+	tryGetFromCmdArgs()
 	prompRequiredEnvs()
 	var err error
 	client, err = discordgo.New("Bot " + token)

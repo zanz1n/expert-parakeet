@@ -12,7 +12,6 @@ func onReady(s *discordgo.Session, e *discordgo.Ready) {
 }
 
 func onInteraction(s *discordgo.Session, e *discordgo.InteractionCreate) {
-	log.Println(e.AppID)
 	if e.Type == discordgo.InteractionApplicationCommand {
 		if cmd, find := GetCommand(e.ApplicationCommandData().Name); find {
 			s.InteractionRespond(e.Interaction, &discordgo.InteractionResponse{
@@ -31,7 +30,6 @@ func onInteraction(s *discordgo.Session, e *discordgo.InteractionCreate) {
 					Content: &errStr,
 				})
 			}
-
 			return
 		}
 	}

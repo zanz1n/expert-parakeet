@@ -7,7 +7,7 @@ import (
 	"github.com/bwmarrin/discordgo"
 )
 
-const callJobInterval uint8 = 1
+const callJobInterval uint16 = 750
 
 type CallJob struct {
 	GuildId  string
@@ -34,9 +34,17 @@ func (cm *CallJobManager) AttachListenner(id int) {
 		err      error
 		channels []*discordgo.Channel
 		chList   []*discordgo.Channel
+		i        int
+		ch       *discordgo.Channel
+		cchI     int
 	)
 
 	for {
+		err = nil
+		i = 0
+		ch = nil
+		cchI = 0
+
 		evt = <-cm.ch
 
 		channels, err = cm.c.GuildChannels(evt.GuildId)
@@ -62,18 +70,21 @@ func (cm *CallJobManager) AttachListenner(id int) {
 			continue
 		}
 
-		cchI := 0
-		for i := 0; i < evt.Times; i++ {
-			time.Sleep(time.Duration(callJobInterval) * time.Second)
+		for i = 0; i < evt.Times; i++ {
+			time.Sleep(time.Duration(callJobInterval) * time.Millisecond)
 
 			if cchI > len(chList)-2 {
 				cchI = 0
 			}
 			cchI++
 
-			ch := chList[cchI]
+			ch = chList[cchI]
 
-			cm.c.GuildMemberMove(evt.GuildId, evt.User.ID, &ch.ID)
+			err = cm.c.GuildMemberMove(evt.GuildId, evt.User.ID, &ch.ID)
+			if err != nil {
+				log.Println(err.Error())
+				break
+			}
 		}
 	}
 }

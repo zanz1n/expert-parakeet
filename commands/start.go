@@ -20,6 +20,12 @@ func NewStartCommand(cm *utils.CallJobManager) *Command {
 					Description: "O usuário",
 					Required:    true,
 				},
+				{
+					Name:        "times",
+					Type:        discordgo.ApplicationCommandOptionInteger,
+					Description: "Quantas vezes você deseja mover",
+					Required:    true,
+				},
 			},
 		},
 		Handler: startCommandHandler(cm),
@@ -28,11 +34,17 @@ func NewStartCommand(cm *utils.CallJobManager) *Command {
 
 func startCommandHandler(cm *utils.CallJobManager) func(c *discordgo.Session, e *discordgo.InteractionCreate) error {
 	return func(c *discordgo.Session, e *discordgo.InteractionCreate) error {
-		var user *discordgo.User
+		var (
+			user  *discordgo.User
+			times int = 10
+		)
 
 		for _, opt := range e.ApplicationCommandData().Options {
 			if opt.Name == "user" && opt.Type == discordgo.ApplicationCommandOptionUser {
 				user = opt.UserValue(c)
+			}
+			if opt.Name == "times" && opt.Type == discordgo.ApplicationCommandOptionInteger {
+				times = int(opt.IntValue())
 			}
 		}
 
@@ -43,10 +55,10 @@ func startCommandHandler(cm *utils.CallJobManager) func(c *discordgo.Session, e 
 		cm.Start(&utils.CallJob{
 			GuildId: e.GuildID,
 			User:    user,
-			Times:   10,
+			Times:   times,
 		})
 
-		c.InteractionResponseEdit(e.Interaction, utils.BasicResponseEdit("Hello World!"))
+		c.InteractionResponseEdit(e.Interaction, utils.BasicResponseEdit("Ok!"))
 		return nil
 	}
 }

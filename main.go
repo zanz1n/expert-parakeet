@@ -38,6 +38,7 @@ func main() {
 	client.Identify.Intents = discordgo.MakeIntent(discordgo.IntentsAll)
 
 	client.AddHandler(onReady)
+	client.AddHandler(onInteraction)
 
 	if err = client.Open(); err != nil {
 		log.Panicln("Failed to connect to discord\n" + err.Error())

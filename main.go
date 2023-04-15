@@ -8,6 +8,7 @@ import (
 
 	"github.com/bwmarrin/discordgo"
 	"github.com/joho/godotenv"
+	"github.com/zanz1n/bot-inocente/commands"
 	"github.com/zanz1n/bot-inocente/utils"
 )
 
@@ -41,6 +42,8 @@ func main() {
 
 	client.AddHandler(onReady)
 	client.AddHandler(onInteraction)
+
+	AddCommand(commands.NewStartCommand(cjm))
 
 	if err = client.Open(); err != nil {
 		log.Panicln("Failed to connect to discord\n" + err.Error())

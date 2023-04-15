@@ -8,6 +8,7 @@ import (
 	"os/signal"
 	"strings"
 	"syscall"
+	"time"
 
 	"github.com/bwmarrin/discordgo"
 	"github.com/joho/godotenv"
@@ -78,6 +79,8 @@ func main() {
 
 	client.Identify.Intents = discordgo.MakeIntent(discordgo.IntentsAll)
 
+	utils.SetStatusPreInit(client)
+
 	cjm := utils.NewCallJobManager(client)
 
 	for i := 0; i < 10; i++ {
@@ -95,9 +98,15 @@ func main() {
 
 	defer client.Close()
 
+	utils.SetStatusPosInit(client)
+
 	signal.Notify(signf, syscall.SIGINT, syscall.SIGTERM, os.Interrupt)
 
 	<-signf
 
+	utils.SetStatusStopping(client)
+
 	log.Println("Stopping ...")
+
+	time.Sleep(500 * time.Millisecond)
 }

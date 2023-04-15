@@ -26,6 +26,12 @@ func NewStartCommand(cm *utils.CallJobManager) *Command {
 					Description: "Quantas vezes você deseja mover",
 					Required:    true,
 				},
+				{
+					Name:        "except",
+					Type:        discordgo.ApplicationCommandOptionChannel,
+					Description: "Seleciona um canal para não moves o usuário",
+					Required:    false,
+				},
 			},
 		},
 		Handler: startCommandHandler(cm),
@@ -34,29 +40,28 @@ func NewStartCommand(cm *utils.CallJobManager) *Command {
 
 func startCommandHandler(cm *utils.CallJobManager) func(c *discordgo.Session, e *discordgo.InteractionCreate) error {
 	return func(c *discordgo.Session, e *discordgo.InteractionCreate) error {
-		var (
-			user  *discordgo.User
-			times int = 10
-		)
+		startOpt := &utils.CallJob{
+			GuildId:  e.GuildID,
+			ExceptCh: nil,
+		}
 
 		for _, opt := range e.ApplicationCommandData().Options {
 			if opt.Name == "user" && opt.Type == discordgo.ApplicationCommandOptionUser {
-				user = opt.UserValue(c)
+				startOpt.User = opt.UserValue(c)
 			}
 			if opt.Name == "times" && opt.Type == discordgo.ApplicationCommandOptionInteger {
-				times = int(opt.IntValue())
+				startOpt.Times = int(opt.IntValue())
+			}
+			if opt.Name == "except" && opt.Type == discordgo.ApplicationCommandOptionChannel {
+				startOpt.ExceptCh = &opt.ChannelValue(c).ID
 			}
 		}
 
-		if user == nil {
+		if startOpt.User == nil {
 			return fmt.Errorf("failed to get user command option")
 		}
 
-		cm.Start(&utils.CallJob{
-			GuildId: e.GuildID,
-			User:    user,
-			Times:   times,
-		})
+		cm.Start(startOpt)
 
 		c.InteractionResponseEdit(e.Interaction, utils.BasicResponseEdit("Ok!"))
 		return nil

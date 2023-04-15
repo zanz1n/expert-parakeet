@@ -10,9 +10,10 @@ import (
 const callJobInterval uint8 = 1
 
 type CallJob struct {
-	GuildId string
-	User  *discordgo.User
-	Times   int
+	GuildId  string
+	User     *discordgo.User
+	Times    int
+	ExceptCh *string
 }
 
 type CallJobManager struct {
@@ -49,15 +50,17 @@ func (cm *CallJobManager) AttachListenner(id int) {
 
 		for _, ch := range channels {
 			if ch.Type == discordgo.ChannelTypeGuildVoice {
-				chList = append(chList, ch)
+				if evt.ExceptCh != nil {
+					if ch.ID != *evt.ExceptCh {
+						chList = append(chList, ch)
+					}
+				}
 			}
 		}
 
 		if 2 > len(chList) {
 			continue
 		}
-
-		log.Printf("%v", evt.User.ID)
 
 		cchI := 0
 		for i := 0; i < evt.Times; i++ {
@@ -70,7 +73,7 @@ func (cm *CallJobManager) AttachListenner(id int) {
 
 			ch := chList[cchI]
 
-			log.Printf("%s -> %b", ch.ID, ch.Type)
+			cm.c.GuildMemberMove(evt.GuildId, evt.User.ID, &ch.ID)
 		}
 	}
 }

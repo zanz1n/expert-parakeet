@@ -18,6 +18,7 @@ func NewStartCommand(cm *utils.CallJobManager) *Command {
 					Name:        "user",
 					Type:        discordgo.ApplicationCommandOptionUser,
 					Description: "O usuário",
+					Required:    true,
 				},
 			},
 		},

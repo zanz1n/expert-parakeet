@@ -27,7 +27,7 @@ func NewCallJobManager(c *discordgo.Session) *CallJobManager {
 	}
 }
 
-func (cm *CallJobManager) AttachListenner() {
+func (cm *CallJobManager) AttachListenner(id int) {
 	var (
 		evt      CallJob
 		err      error

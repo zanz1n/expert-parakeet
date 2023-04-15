@@ -65,7 +65,6 @@ func prompRequiredEnvs() {
 
 	token = os.Getenv("DISCORD_TOKEN")
 	log.Printf("Guild id is %s", os.Getenv("GUILD_ID"))
-	log.Printf("Bot token is %s", token)
 }
 
 func main() {
@@ -82,7 +81,7 @@ func main() {
 	cjm := utils.NewCallJobManager(client)
 
 	for i := 0; i < 10; i++ {
-		go cjm.AttachListenner()
+		go cjm.AttachListenner(i)
 	}
 
 	client.AddHandler(onReady)

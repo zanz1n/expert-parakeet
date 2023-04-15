@@ -8,23 +8,19 @@ import (
 
 	"github.com/bwmarrin/discordgo"
 	"github.com/joho/godotenv"
+	"github.com/zanz1n/bot-inocente/utils"
 )
 
 var (
 	token  string
-	signf  = make(chan os.Signal)
+	signf  chan os.Signal
 	client *discordgo.Session
 )
 
-func handleInterrupt(sigch chan os.Signal) {
-	<-sigch
-	log.Println("Stopping ...")
-	client.Close()
-}
-
 func init() {
 	godotenv.Load()
-	token = os.Getenv("TOKEN")
+	signf = make(chan os.Signal)
+	token = os.Getenv("DISCORD_TOKEN")
 }
 
 func main() {
@@ -37,6 +33,12 @@ func main() {
 
 	client.Identify.Intents = discordgo.MakeIntent(discordgo.IntentsAll)
 
+	cjm := utils.NewCallJobManager(client)
+
+	for i := 0; i < 10; i++ {
+		go cjm.AttachListenner()
+	}
+
 	client.AddHandler(onReady)
 	client.AddHandler(onInteraction)
 
@@ -44,7 +46,11 @@ func main() {
 		log.Panicln("Failed to connect to discord\n" + err.Error())
 	}
 
+	defer client.Close()
+
 	signal.Notify(signf, syscall.SIGINT, syscall.SIGTERM, os.Interrupt)
 
-	handleInterrupt(signf)
+	<-signf
+
+	log.Println("Stopping ...")
 }

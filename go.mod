@@ -1,4 +1,4 @@
-module github.com/zanz1n/bot-inocente
+module github.com/zanz1n/expert-parakeet
 
 go 1.20
 

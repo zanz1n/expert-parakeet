@@ -5,7 +5,7 @@ import (
 	"os"
 
 	"github.com/bwmarrin/discordgo"
-	"github.com/zanz1n/bot-inocente/commands"
+	"github.com/zanz1n/expert-parakeet/commands"
 )
 
 var (

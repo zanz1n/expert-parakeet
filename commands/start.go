@@ -4,7 +4,7 @@ import (
 	"fmt"
 
 	"github.com/bwmarrin/discordgo"
-	"github.com/zanz1n/bot-inocente/utils"
+	"github.com/zanz1n/expert-parakeet/utils"
 )
 
 func NewStartCommand(cm *utils.CallJobManager) *Command {

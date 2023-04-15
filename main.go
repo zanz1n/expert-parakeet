@@ -12,8 +12,8 @@ import (
 
 	"github.com/bwmarrin/discordgo"
 	"github.com/joho/godotenv"
-	"github.com/zanz1n/bot-inocente/commands"
-	"github.com/zanz1n/bot-inocente/utils"
+	"github.com/zanz1n/expert-parakeet/commands"
+	"github.com/zanz1n/expert-parakeet/utils"
 	"golang.org/x/term"
 )
 

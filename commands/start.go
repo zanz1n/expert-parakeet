@@ -60,6 +60,14 @@ func startCommandHandler(
 			}
 		}
 
+		if 0 >= startOpt.Times {
+			c.InteractionResponseEdit(
+				e.Interaction,
+				utils.BasicResponseEdit("Opção times precisa ser um inteiro válido maior que 0"),
+			)
+			return nil
+		}
+
 		if startOpt.User == nil {
 			return fmt.Errorf("failed to get user command option")
 		}

@@ -80,6 +80,8 @@ func (cm *CallJobManager) HandleJob(evt CallJob) {
 			}
 		}
 	}
+
+	cm.c.GuildMemberMove(evt.GuildId, evt.User.ID, &voiceState.ChannelID)
 }
 
 func (cm *CallJobManager) AttachListenner(id int) {

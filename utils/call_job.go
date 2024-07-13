@@ -74,7 +74,7 @@ func (cm *CallJobManager) HandleJob(evt CallJob) {
 		err = cm.c.GuildMemberMove(evt.GuildId, evt.User.ID, &ch.ID)
 		if err != nil {
 			errCt++
-			if errCt > 20 {
+			if errCt > 10 {
 				log.Println(err.Error())
 				break
 			}

@@ -76,3 +76,20 @@ them and paste in the CMD. **Note that when you type the token it will not be
 shown by default.**
 
 ![Image 7](images/7.png) ![Image 8](images/8.png)
+
+### Ignored user
+**Setting this option to some user id makes this user invulnerable to the bot.**
+
+You can set it adding the --ignored-user command argument
+
+```bash
+# Replace <something> with the real values
+./windows-amd64.exe --ignored-user=<user_id_here>
+```
+
+Or you can set it with environment variables too!
+
+```bash
+# Replace <something> with the real values
+IGNORED_USER="<user_id_here>"
+```

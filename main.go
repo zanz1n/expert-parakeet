@@ -18,9 +18,11 @@ import (
 )
 
 var (
-	token  string
-	signf  chan os.Signal
-	client *discordgo.Session
+	ignoredUser *string = nil
+	guildId     string
+	token       string
+	signf       chan os.Signal
+	client      *discordgo.Session
 )
 
 func init() {
@@ -41,10 +43,14 @@ func tryGetFromCmdArgs() bool {
 				i++
 				os.Setenv("GUILD_ID", args[1])
 			}
+			if args[0] == "--ignored-user" {
+				i++
+				os.Setenv("IGNORED_USER", args[1])
+			}
 		}
 	}
 
-	return i == 2
+	return i == 3
 }
 
 func prompRequiredEnvs() {
@@ -84,13 +90,23 @@ func prompRequiredEnvs() {
 	}
 
 	token = os.Getenv("DISCORD_TOKEN")
-	log.Printf("Guild id is %s", os.Getenv("GUILD_ID"))
+	guildId = os.Getenv("GUILD_ID")
+	if v := os.Getenv("IGNORED_USER"); v != "" {
+		*ignoredUser = v
+	}
 }
 
 func main() {
 	tryGetFromCmdArgs()
 	prompRequiredEnvs()
 	var err error
+
+	log.Println("Token is: " + token)
+	log.Println("Guild id is: " + guildId)
+	if ignoredUser != nil {
+		log.Println("Ignored user is: " + *ignoredUser)
+	}
+
 	client, err = discordgo.New("Bot " + token)
 
 	if err != nil {
@@ -110,7 +126,7 @@ func main() {
 	client.AddHandler(onReady)
 	client.AddHandler(onInteraction)
 
-	AddCommand(commands.NewStartCommand(cjm))
+	AddCommand(commands.NewStartCommand(cjm, ignoredUser))
 
 	if err = client.Open(); err != nil {
 		log.Fatalln("Failed to connect to discord\n" + err.Error())

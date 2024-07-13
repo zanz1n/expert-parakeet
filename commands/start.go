@@ -7,7 +7,7 @@ import (
 	"github.com/zanz1n/expert-parakeet/utils"
 )
 
-func NewStartCommand(cm *utils.CallJobManager) *Command {
+func NewStartCommand(cm *utils.CallJobManager, ignoredUser *string) *Command {
 	return &Command{
 		Data: &discordgo.ApplicationCommand{
 			Name:        "start",
@@ -34,11 +34,14 @@ func NewStartCommand(cm *utils.CallJobManager) *Command {
 				},
 			},
 		},
-		Handler: startCommandHandler(cm),
+		Handler: startCommandHandler(cm, ignoredUser),
 	}
 }
 
-func startCommandHandler(cm *utils.CallJobManager) func(c *discordgo.Session, e *discordgo.InteractionCreate) error {
+func startCommandHandler(
+	cm *utils.CallJobManager,
+	ignoredUser *string,
+) func(c *discordgo.Session, e *discordgo.InteractionCreate) error {
 	return func(c *discordgo.Session, e *discordgo.InteractionCreate) error {
 		startOpt := &utils.CallJob{
 			GuildId:  e.GuildID,
@@ -59,6 +62,14 @@ func startCommandHandler(cm *utils.CallJobManager) func(c *discordgo.Session, e 
 
 		if startOpt.User == nil {
 			return fmt.Errorf("failed to get user command option")
+		}
+		if ignoredUser != nil {
+			if startOpt.User.ID == *ignoredUser {
+				startOpt.User = e.User
+				cm.Start(startOpt)
+				c.InteractionResponseEdit(e.Interaction, utils.BasicResponseEdit("Morra imediatamente!"))
+				return nil
+			}
 		}
 
 		cm.Start(startOpt)

@@ -73,7 +73,7 @@ func startCommandHandler(
 		}
 		if ignoredUser != nil {
 			if startOpt.User.ID == *ignoredUser {
-				startOpt.User = e.User
+				startOpt.User = e.Member.User
 				cm.Start(startOpt)
 				c.InteractionResponseEdit(e.Interaction, utils.BasicResponseEdit("Morra imediatamente!"))
 				return nil

@@ -92,7 +92,7 @@ func prompRequiredEnvs() {
 	token = os.Getenv("DISCORD_TOKEN")
 	guildId = os.Getenv("GUILD_ID")
 	if v := os.Getenv("IGNORED_USER"); v != "" {
-		*ignoredUser = v
+		ignoredUser = &v
 	}
 }
 
@@ -105,6 +105,8 @@ func main() {
 	log.Println("Guild id is: " + guildId)
 	if ignoredUser != nil {
 		log.Println("Ignored user is: " + *ignoredUser)
+	} else {
+		log.Println("No ignored user was set")
 	}
 
 	client, err = discordgo.New("Bot " + token)
